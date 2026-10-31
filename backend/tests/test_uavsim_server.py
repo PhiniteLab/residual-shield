@@ -1,22 +1,22 @@
 """Integration tests for the FastAPI WebSocket bridge."""
 from __future__ import annotations
 
-from fastapi.testclient import TestClient
 import numpy as np
 import pytest
+from fastapi.testclient import TestClient
 
 from uavsim.server import (
     CRUISE_AIRSPEED_MPS,
     FIGHT_MODE_PROFILE,
-    Runtime,
     SIMULATION_FRAME_SCHEMA_VERSION,
     TAKEOFF_PROFILES,
     TRAJECTORY_PROFILES,
+    Runtime,
+    _handle_command,
     app,
     apply_effects,
     build_simulation_frame,
     reference_commands,
-    _handle_command,
 )
 
 
@@ -386,11 +386,10 @@ def test_runtime_frame_air_data_matches_post_step_state() -> None:
 
 
 def test_websocket_ignores_non_object_json_payload() -> None:
-    with TestClient(app) as client:
-        with client.websocket_connect("/ws/uav-digital-twin") as ws:
-            ws.send_json([])
-            frame = ws.receive_json()
-            assert frame["type"] == "simulation_frame"
+    with TestClient(app) as client, client.websocket_connect("/ws/uav-digital-twin") as ws:
+        ws.send_json([])
+        frame = ws.receive_json()
+        assert frame["type"] == "simulation_frame"
 
 
 def test_build_simulation_frame_schema_snapshot() -> None:
@@ -761,25 +760,23 @@ def test_fixed_and_q_learning_controller_modes_are_distinct_in_runtime_frames() 
 
 
 def test_websocket_emits_simulation_frame() -> None:
-    with TestClient(app) as client:
-        with client.websocket_connect("/ws/uav-digital-twin") as ws:
-            ws.send_json({
-                "command": "start",
-                "scenario": "loiter_orbit",
-                "profile": "loiter_orbit",
-                "controller": "fixed_matlab_autopilot",
-                "effects": {"steady_wind_n": 0.0},
-            })
-            frame = ws.receive_json()
-            assert frame["type"] == "simulation_frame"
-            assert frame["profile"] == "loiter_orbit"
-            assert "uav_state" in frame and "control_state" in frame
+    with TestClient(app) as client, client.websocket_connect("/ws/uav-digital-twin") as ws:
+        ws.send_json({
+            "command": "start",
+            "scenario": "loiter_orbit",
+            "profile": "loiter_orbit",
+            "controller": "fixed_matlab_autopilot",
+            "effects": {"steady_wind_n": 0.0},
+        })
+        frame = ws.receive_json()
+        assert frame["type"] == "simulation_frame"
+        assert frame["profile"] == "loiter_orbit"
+        assert "uav_state" in frame and "control_state" in frame
 
 
 def test_websocket_ignores_malformed_payload() -> None:
-    with TestClient(app) as client:
-        with client.websocket_connect("/ws/uav-digital-twin") as ws:
-            ws.send_text("this-is-not-json")
-            # Server should still emit a frame on the next loop iteration.
-            frame = ws.receive_json()
-            assert frame["type"] == "simulation_frame"
+    with TestClient(app) as client, client.websocket_connect("/ws/uav-digital-twin") as ws:
+        ws.send_text("this-is-not-json")
+        # Server should still emit a frame on the next loop iteration.
+        frame = ws.receive_json()
+        assert frame["type"] == "simulation_frame"

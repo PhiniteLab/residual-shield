@@ -10,7 +10,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from math import sqrt
 
-
 T0_K = 288.15
 LAPSE_K_PER_M = 0.0065
 GAS_R_AIR = 287.05

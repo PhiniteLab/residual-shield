@@ -1,6 +1,7 @@
 """Autopilot gain computation equivalent to ``computeGains.m``."""
 from __future__ import annotations
-from math import sqrt, pi
+
+from math import pi, sqrt
 
 from .parameters import UAVParameters
 from .transfer_functions import TransferFunctionData

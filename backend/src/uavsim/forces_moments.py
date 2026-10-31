@@ -7,12 +7,14 @@ Simulink/MATLAB source.  Set ``exact_source=False`` to use the textbook wind
 transformation.
 """
 from __future__ import annotations
-import numpy as np
-from math import sin, cos, sqrt, atan2, exp
 
+from math import atan2, cos, exp, sin, sqrt
+
+import numpy as np
+
+from .atmosphere import density_at_altitude
 from .parameters import UAVParameters
 from .rotations import R_v_to_b
-from .atmosphere import density_at_altitude
 
 
 def _safe_div(num: float, den: float, fallback: float = 0.0) -> float:

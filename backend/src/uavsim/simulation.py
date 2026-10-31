@@ -8,16 +8,18 @@ with the Wind subsystem feeding the MAV block and the draw/plot blocks replaced
 by Python-side telemetry/visualization utilities.
 """
 from __future__ import annotations
+
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
-from typing import Callable, Iterator
+
 import numpy as np
 
-from .parameters import UAVParameters
 from .autopilot import Autopilot
-from .dynamics import mav_derivatives, mav_derivatives_from_forces, rk4_step
-from .forces_moments import forces_moments, air_data
-from .wind import zero_wind, DrydenWind
 from .commands import mavsim_auto_commands
+from .dynamics import mav_derivatives, mav_derivatives_from_forces, rk4_step
+from .forces_moments import air_data, forces_moments
+from .parameters import UAVParameters
+from .wind import DrydenWind, zero_wind
 
 CommandFn = Callable[[float], np.ndarray]
 WindFn = Callable[[float], np.ndarray]
@@ -161,7 +163,7 @@ def simulate_mavsim_auto_stream(
         # integration substeps, matching the sampled MATLAB Fcn + continuous MAV.
         for j in range(substeps):
             tj = t + j * dt
-            f = lambda tt, xx: mav_derivatives(xx, step.delta, step.wind, P, exact_source=exact_source)
+            f = lambda tt, xx, step=step: mav_derivatives(xx, step.delta, step.wind, P, exact_source=exact_source)
             x = rk4_step(f, x, tj, dt)
             if not np.all(np.isfinite(x)):
                 raise FloatingPointError(f"Non-finite state at t={tj:.3f}: {x}")
@@ -227,7 +229,7 @@ def simulate_mavsim_auto(
         dt = Ts / substeps
         for j in range(substeps):
             tj = t + j * dt
-            f = lambda tt, xx: mav_derivatives(xx, step.delta, step.wind, P, exact_source=exact_source)
+            f = lambda tt, xx, step=step: mav_derivatives(xx, step.delta, step.wind, P, exact_source=exact_source)
             x = rk4_step(f, x, tj, dt)
             if not np.all(np.isfinite(x)):
                 raise FloatingPointError(f"Non-finite state at t={tj:.3f}: {x}")

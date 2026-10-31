@@ -1,7 +1,9 @@
 """Python analogue of ``output.m``."""
 from __future__ import annotations
+
+from math import atan2, sqrt
+
 import numpy as np
-from math import sqrt, atan2
 
 
 def output(in_vec: np.ndarray) -> np.ndarray:

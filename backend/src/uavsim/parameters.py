@@ -7,6 +7,7 @@ The trim calculation is implemented in Python because MATLAB/Simulink's
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+
 import numpy as np
 
 
@@ -192,9 +193,9 @@ def build_default_parameters(
         P.u_trim = np.array([0.0, 0.0, 0.0, 1.0], dtype=float)
         return P
 
-    from .trim import compute_trim
-    from .transfer_functions import compute_tf_model
     from .gains import compute_gains
+    from .transfer_functions import compute_tf_model
+    from .trim import compute_trim
 
     x_trim, u_trim, info = compute_trim(P, Va=Va, gamma=gamma, R=R, exact_source=exact_source)
     if not info.get("feasible", False):

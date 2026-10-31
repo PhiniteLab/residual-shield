@@ -11,18 +11,11 @@ from uavsim import (
     simulate_mavsim_auto,
     simulate_mavsim_auto_stream,
 )
-from uavsim.autopilot import Autopilot
-from uavsim.commands import h_destination, phi_destination
-from uavsim.telemetry import (
-    TELEMETRY_COLUMNS,
-    result_summary,
-    result_to_matrix,
-    telemetry_rows_from_result,
-    write_result_csv,
-)
 from uavsim.actuators import ActuatorState
 from uavsim.aircraft_config import load_aircraft_config, parameters_from_config
 from uavsim.atmosphere import density_at_altitude, sample_atmosphere
+from uavsim.autopilot import Autopilot
+from uavsim.commands import h_destination, phi_destination
 from uavsim.experiment_runner import (
     REFERENCE_BENCHMARK_SCENARIOS,
     compare_all_methods,
@@ -36,6 +29,13 @@ from uavsim.guidance import orbit_guidance, straight_path_guidance
 from uavsim.q_learning import TabularQLearningSupervisor
 from uavsim.sharq_hjb import SHARQHJBResidualSupervisor
 from uavsim.tecs import TECSController
+from uavsim.telemetry import (
+    TELEMETRY_COLUMNS,
+    result_summary,
+    result_to_matrix,
+    telemetry_rows_from_result,
+    write_result_csv,
+)
 
 
 def test_default_parameters_trim_and_gains() -> None:

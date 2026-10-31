@@ -269,7 +269,7 @@ class Runtime:
     fight_mode_heading_rad: float = 0.0
 
     @classmethod
-    def create(cls, profile: str = "loiter_orbit") -> "Runtime":
+    def create(cls, profile: str = "loiter_orbit") -> Runtime:
         active_profile = profile if profile in TRAJECTORY_PROFILES else "loiter_orbit"
         P = build_default_parameters(compute_trim_and_gains=True, exact_source=True, Va=CRUISE_AIRSPEED_MPS)
         schedule = build_gain_schedule()
@@ -993,7 +993,8 @@ def _handle_command(rt: Runtime, command: Any, running: bool = True) -> tuple[bo
     stream. Configuration commands preserve the current run/pause state.
     """
     if not isinstance(command, dict):
-        raise ValueError("WebSocket command must be a JSON object")
+        # ValueError (not TypeError) is this function's documented rejection contract.
+        raise ValueError("WebSocket command must be a JSON object")  # noqa: TRY004
 
     episode = int(command.get("episode", 1))
     controller_requested = str(command.get("controller", "fixed_matlab_autopilot"))

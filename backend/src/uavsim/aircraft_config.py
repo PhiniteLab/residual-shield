@@ -12,7 +12,6 @@ from typing import Any
 
 from .parameters import UAVParameters
 
-
 CONFIG_ROOT = Path(__file__).resolve().parents[2] / "configs" / "aircraft"
 
 

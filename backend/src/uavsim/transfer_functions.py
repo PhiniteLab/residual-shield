@@ -1,8 +1,10 @@
 """Transfer-function constants equivalent to ``compute_tf_model.m``."""
 from __future__ import annotations
+
 from dataclasses import dataclass
+from math import atan2, sqrt
+
 import numpy as np
-from math import sqrt, atan2
 
 from .parameters import UAVParameters
 

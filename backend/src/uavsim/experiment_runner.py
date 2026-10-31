@@ -15,10 +15,11 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass
 from math import sqrt
 from pathlib import Path
-from typing import Literal, Mapping, Sequence, cast
+from typing import Literal, cast
 
 import numpy as np
 
@@ -31,7 +32,6 @@ from .server import (
     apply_effects,
 )
 from .sharq_hjb import SHARQHJBResidualSupervisor
-
 
 ControllerMode = Literal["fixed_matlab_autopilot", "online_q_learning", "sharq_hjb"]
 CheckpointFormat = Literal["json", "npz"]
@@ -874,7 +874,7 @@ def write_dicts_csv(path: str | Path, rows: Sequence[Mapping[str, object]]) -> N
         return
     fieldnames: list[str] = []
     for row in rows:
-        for key in row.keys():
+        for key in row:
             if key not in fieldnames:
                 fieldnames.append(key)
     with out.open("w", newline="", encoding="utf-8") as handle:

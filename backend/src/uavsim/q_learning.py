@@ -7,13 +7,12 @@ PID autopilot.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
 import json
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
 import numpy as np
-
 
 ACTIONS: tuple[tuple[float, float, float], ...] = (
     (0.0, 0.0, 0.0),
@@ -94,7 +93,7 @@ class TabularQLearningSupervisor:
     metrics: QLearningMetrics = field(default_factory=QLearningMetrics)
 
     @classmethod
-    def from_config(cls, config: QLearningConfig) -> "TabularQLearningSupervisor":
+    def from_config(cls, config: QLearningConfig) -> TabularQLearningSupervisor:
         return cls(**asdict(config))
 
     def __post_init__(self) -> None:
@@ -464,7 +463,7 @@ class TabularQLearningSupervisor:
         }
 
     @classmethod
-    def from_payload(cls, payload: dict[str, Any]) -> "TabularQLearningSupervisor":
+    def from_payload(cls, payload: dict[str, Any]) -> TabularQLearningSupervisor:
         config = payload.get("config", {})
         learner = cls(
             alpha=float(config.get("alpha", 0.12)),
@@ -498,7 +497,7 @@ class TabularQLearningSupervisor:
         out.write_text(json.dumps(self.to_payload(), indent=2, sort_keys=True), encoding="utf-8")
 
     @classmethod
-    def load_json(cls, path: str | Path) -> "TabularQLearningSupervisor":
+    def load_json(cls, path: str | Path) -> TabularQLearningSupervisor:
         return cls.from_payload(json.loads(Path(path).read_text(encoding="utf-8")))
 
     def save_npz(self, path: str | Path) -> None:
@@ -510,7 +509,7 @@ class TabularQLearningSupervisor:
         np.savez_compressed(out, states=states, values=values, meta=np.asarray(meta))
 
     @classmethod
-    def load_npz(cls, path: str | Path) -> "TabularQLearningSupervisor":
+    def load_npz(cls, path: str | Path) -> TabularQLearningSupervisor:
         with np.load(Path(path), allow_pickle=False) as data:
             meta = json.loads(str(data["meta"].item()))
             learner = cls.from_payload({**meta, "q_table": {}})

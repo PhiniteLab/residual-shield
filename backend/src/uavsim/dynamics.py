@@ -7,11 +7,13 @@ twice and the inertia coefficients :math:`\Gamma_3`, :math:`\Gamma_5`,
 :math:`\Gamma_6` were inconsistent). The flag is kept for API compatibility.
 """
 from __future__ import annotations
-import numpy as np
-from math import sin, cos, tan
 
-from .parameters import UAVParameters
+from math import cos, sin, tan
+
+import numpy as np
+
 from .forces_moments import forces_moments
+from .parameters import UAVParameters
 
 
 def gamma_constants(P: UAVParameters, *, exact_source: bool = True) -> dict[str, float]:

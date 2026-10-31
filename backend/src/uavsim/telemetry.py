@@ -1,14 +1,17 @@
 """Telemetry extraction, CSV export, and summary statistics."""
 from __future__ import annotations
 
-from pathlib import Path
 import csv
 from math import atan2, pi
-from typing import Any
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
 from .simulation import SimulationResult, SimulationStep
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 STATE_NAMES = ["pn", "pe", "pd", "u", "v", "w", "phi", "theta", "psi", "p", "q", "r"]
 DELTA_NAMES = ["delta_e", "delta_a", "delta_r", "delta_t"]
@@ -220,7 +223,7 @@ def result_to_matrix(result: SimulationResult) -> tuple[list[str], np.ndarray]:
     if not rows:
         return list(TELEMETRY_COLUMNS), np.empty((0, len(TELEMETRY_COLUMNS)))
     cols = [c for c in TELEMETRY_COLUMNS if c in rows[0]]
-    cols += [c for c in rows[0].keys() if c not in cols]
+    cols += [c for c in rows[0] if c not in cols]
     data = np.asarray([[row.get(c, np.nan) for c in cols] for row in rows], dtype=float)
     return cols, data
 
@@ -231,7 +234,7 @@ def write_rows_csv(path: str | Path, rows: list[dict[str, float]]) -> Path:
     if not rows:
         raise ValueError("No telemetry rows to write")
     fieldnames = [c for c in TELEMETRY_COLUMNS if c in rows[0]]
-    fieldnames += [c for c in rows[0].keys() if c not in fieldnames]
+    fieldnames += [c for c in rows[0] if c not in fieldnames]
     with path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -281,7 +284,7 @@ class StreamingCSVLogger:
         self._file.flush()
         self._file.close()
 
-    def __enter__(self) -> "StreamingCSVLogger":
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:

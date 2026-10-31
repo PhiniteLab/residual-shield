@@ -1,7 +1,9 @@
 """Rotation matrices used by the UAV model."""
 from __future__ import annotations
+
+from math import cos, sin
+
 import numpy as np
-from math import sin, cos
 
 
 def R_v_to_b(phi: float, theta: float, psi: float) -> np.ndarray:

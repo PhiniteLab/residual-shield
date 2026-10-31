@@ -1,9 +1,10 @@
 """Numerical analogue of ``compute_ss_model.m``."""
 from __future__ import annotations
+
 import numpy as np
 
-from .parameters import UAVParameters
 from .dynamics import mav_derivatives
+from .parameters import UAVParameters
 
 
 def numerical_jacobians(

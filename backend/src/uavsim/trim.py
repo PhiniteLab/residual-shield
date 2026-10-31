@@ -1,11 +1,13 @@
 """Python replacement for Simulink's ``trim`` call in ``compute_trim.m``."""
 from __future__ import annotations
+
+from math import atan2, sin, sqrt
+
 import numpy as np
-from math import sin, sqrt, atan2
 from scipy.optimize import least_squares
 
-from .parameters import UAVParameters
 from .dynamics import mav_derivatives
+from .parameters import UAVParameters
 
 
 def _pack_to_state(z: np.ndarray) -> tuple[np.ndarray, np.ndarray]:

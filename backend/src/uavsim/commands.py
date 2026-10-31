@@ -1,5 +1,6 @@
 """Command profiles extracted from ``mavsim_auto.mdl`` Stateflow charts."""
 from __future__ import annotations
+
 import numpy as np
 
 

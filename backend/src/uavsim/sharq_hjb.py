@@ -20,8 +20,13 @@ from typing import Any
 
 import numpy as np
 
-from .q_learning import ACTIONS, QLearningConfig, QLearningMetrics, STATE_SIZE, TabularQLearningSupervisor
-
+from .q_learning import (
+    ACTIONS,
+    STATE_SIZE,
+    QLearningConfig,
+    QLearningMetrics,
+    TabularQLearningSupervisor,
+)
 
 SHARQ_HJB_ALGORITHM_VERSION = "sharq_hjb_discrete_hjb_guidance_residual_v2"
 SHARQ_HJB_STATE_ENCODER_VERSION = "semi_discrete_hjb_energy_lateral_load_bins_v2"
@@ -173,7 +178,7 @@ class SHARQHJBResidualSupervisor(TabularQLearningSupervisor):
     fallback_q_mode: bool = False
 
     @classmethod
-    def from_config(cls, config: QLearningConfig) -> "SHARQHJBResidualSupervisor":
+    def from_config(cls, config: QLearningConfig) -> SHARQHJBResidualSupervisor:
         hjb_config = config if isinstance(config, SHARQHJBConfig) else SHARQHJBConfig(
             alpha=config.alpha,
             gamma=config.gamma,
@@ -779,7 +784,7 @@ class SHARQHJBResidualSupervisor(TabularQLearningSupervisor):
         return payload
 
     @classmethod
-    def from_payload(cls, payload: dict[str, Any]) -> "SHARQHJBResidualSupervisor":
+    def from_payload(cls, payload: dict[str, Any]) -> SHARQHJBResidualSupervisor:
         learner = super().from_payload(payload)
         if not isinstance(learner, cls):  # pragma: no cover - defensive for static analyzers
             raise TypeError("SHARQHJBResidualSupervisor.from_payload returned an incompatible learner")

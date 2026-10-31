@@ -1,7 +1,9 @@
 """Wind models corresponding to the Simulink wind subsystem."""
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Any, cast
+
 import numpy as np
 from scipy import signal
 
